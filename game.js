@@ -10,8 +10,11 @@ for (let i = 0; i < size; i++) {
 }
 
 function takeAnX(cell) {
-    cell.innerHTML = 'x';
-    getTableContent();
+    if (cell.innerHTML != '')
+        return;
+    else
+        cell.innerHTML = 'x';
+    AIresponse();
 }
 
 function addeventlistener() {
@@ -29,12 +32,13 @@ function takeO(coordinates = []) {
     if (document.querySelectorAll('tr')[i].children[j].innerHTML == '')
         document.querySelectorAll('tr')[i].children[j].innerHTML = 'o';
     else
-        takeO(checkTwoBetween());
+        takeO(checkTable());
 }
 
 function checkWin(tableContent) {
     for (let i = 0; i < size; i++) {
         for (let j = 0; j < size; j++) {
+            if(tableContent)
             if (tableContent[i][j] != '') {
                 // sorban vizsgál
                 if (i - 2 in tableContent && tableContent[i - 1][j] == tableContent[i][j] && tableContent[i - 2][j] == tableContent[i][j])
@@ -70,12 +74,13 @@ function checkWin(tableContent) {
     return false;
 }
 
-function checkTwoBetween(tableContent) {
+function checkTable(tableContent) {
     var emptyCells = 0;
     var nyertes = checkWin(tableContent);
     if (nyertes === false) {
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
+                if(i,j)
                 if (tableContent[i][j] == '') {
                     emptyCells += 1;
                     // sorban vizsgál
@@ -124,21 +129,34 @@ function checkTwoBetween(tableContent) {
 }
 
 function getTableContent() {
-    var tableContent = [];
-    for (var i = 0; i<size; i++) {
+    let tableContent = [];
+    for (let i = 0; i < size; i++) {
         tableContent.push([]);
     }
-    var sorok = document.querySelectorAll('tr');
+    let sorok = document.querySelectorAll('tr');
     for (let i = 0; i < size; i++) {
         for (let j = 0; j < size; j++) {
             tableContent[i].push(sorok[i].children[j].innerHTML);
         }
     }
+    return tableContent;
+}
+
+function AIresponse() {
+    let tableContent = getTableContent();
     console.log(tableContent);
     setTimeout(function () {
+        takeO(checkTable(tableContent));
+        tableContent = getTableContent();
+        var nyertes = checkWin(tableContent);
 
-        takeO(checkTwoBetween(tableContent));
+        setTimeout(function () {
+            if (nyertes !== false) {
+                alert(`A nyertes: ${nyertes}`);
+                location.reload();
+            }
 
+        }, 100);
     }, 100);
 }
 

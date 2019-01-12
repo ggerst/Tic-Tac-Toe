@@ -1,4 +1,4 @@
-var size = parseInt(prompt('mekkora legyen?', '3'), 10);
+var size = parseInt(prompt('mekkora legyen? (javasolt: 3)', '3'), 10);
 
 function createTable() {
     document.querySelector('#board').innerHTML = '';
@@ -91,7 +91,7 @@ function searchOptimal(tableContent) {
     return [i, j];
 }
 
-function searchIfThereARow(tableContent) {
+function searchIfThereIsARow(tableContent) {
     for (let i = 0; i < size; i++) {
         for (let j = 0; j < size; j++) {
             if (tableContent[i][j] === '') {
@@ -132,50 +132,53 @@ function getCoordinates(tableContent) {
     var emptyCells = 0;
     var nyertes = checkWin(tableContent);
     if (nyertes === false) {
-        for (let i = 0; i < size; i++) {
-            for (let j = 0; j < size; j++) {
-                if (tableContent[i][j] === '') {
-                    emptyCells += 1;
-                    // sorban vizsgál
-                    if (i - 2 in tableContent && tableContent[i - 1][j] == 'x' && tableContent[i - 2][j] == 'x')
-                        return [i, j, emptyCells];
-                    if (i + 2 in tableContent && tableContent[i + 1][j] == 'x' && tableContent[i + 2][j] == 'x')
-                        return [i, j, emptyCells];
-                    if (i - 1 in tableContent && i + 1 in tableContent && tableContent[i - 1][j] == 'x' && tableContent[i + 1][j] == 'x')
-                        return [i, j, emptyCells];
-                    // oszlopban vizsgál
-                    if (j - 2 in tableContent[0] && tableContent[i][j - 1] == 'x' && tableContent[i][j - 2] == 'x')
-                        return [i, j, emptyCells];
-                    if (j + 2 in tableContent[0] && tableContent[i][j + 1] == 'x' && tableContent[i][j + 2] == 'x')
-                        return [i, j, emptyCells];
-                    if (j - 1 in tableContent[0] && j + 1 in tableContent[0] && tableContent[i][j - 1] == 'x' && tableContent[i][j + 1] == 'x')
-                        return [i, j, emptyCells];
-                    // átlósan vizsgál -45°-ban
-                    if (j - 2 in tableContent[0] && i - 2 in tableContent && tableContent[i - 1][j - 1] == 'x' && tableContent[i - 2][j - 2] == 'x')
-                        return [i, j, emptyCells];
-                    if (j + 2 in tableContent[0] && i + 2 in tableContent && tableContent[i + 1][j + 1] == 'x' && tableContent[i + 2][j + 2] == 'x')
-                        return [i, j, emptyCells];
-                    if (j - 1 in tableContent[0] && i - 1 in tableContent && j + 1 in tableContent[0] && i + 1 in tableContent && tableContent[i - 1][j - 1] == 'x' && tableContent[i + 1][j + 1] == 'x')
-                        return [i, j, emptyCells];
-                    // átlósan vizsgál +45°-ban
-                    if (j - 2 in tableContent[0] && i + 2 in tableContent && tableContent[i + 1][j - 1] == 'x' && tableContent[i + 2][j - 2] == 'x')
-                        return [i, j, emptyCells];
-                    if (j + 2 in tableContent[0] && i - 2 in tableContent && tableContent[i - 1][j + 1] == 'x' && tableContent[i - 2][j + 2] == 'x')
-                        return [i, j, emptyCells];
-                    if (j - 1 in tableContent[0] && i - 1 in tableContent && j + 1 in tableContent[0] && i + 1 in tableContent && tableContent[i - 1][j + 1] == 'x' && tableContent[i + 1][j - 1] == 'x')
-                        return [i, j, emptyCells];
+        var coordinates = searchIfThereIsARow(tableContent);
+        if (coordinates)
+            return coordinates;
+        else {
+            // védekezés
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    if (tableContent[i][j] === '') {
+                        emptyCells += 1;
+                        // sorban vizsgál
+                        if (i - 2 in tableContent && tableContent[i - 1][j] == 'x' && tableContent[i - 2][j] == 'x')
+                            return [i, j, emptyCells];
+                        if (i + 2 in tableContent && tableContent[i + 1][j] == 'x' && tableContent[i + 2][j] == 'x')
+                            return [i, j, emptyCells];
+                        if (i - 1 in tableContent && i + 1 in tableContent && tableContent[i - 1][j] == 'x' && tableContent[i + 1][j] == 'x')
+                            return [i, j, emptyCells];
+                        // oszlopban vizsgál
+                        if (j - 2 in tableContent[0] && tableContent[i][j - 1] == 'x' && tableContent[i][j - 2] == 'x')
+                            return [i, j, emptyCells];
+                        if (j + 2 in tableContent[0] && tableContent[i][j + 1] == 'x' && tableContent[i][j + 2] == 'x')
+                            return [i, j, emptyCells];
+                        if (j - 1 in tableContent[0] && j + 1 in tableContent[0] && tableContent[i][j - 1] == 'x' && tableContent[i][j + 1] == 'x')
+                            return [i, j, emptyCells];
+                        // átlósan vizsgál -45°-ban
+                        if (j - 2 in tableContent[0] && i - 2 in tableContent && tableContent[i - 1][j - 1] == 'x' && tableContent[i - 2][j - 2] == 'x')
+                            return [i, j, emptyCells];
+                        if (j + 2 in tableContent[0] && i + 2 in tableContent && tableContent[i + 1][j + 1] == 'x' && tableContent[i + 2][j + 2] == 'x')
+                            return [i, j, emptyCells];
+                        if (j - 1 in tableContent[0] && i - 1 in tableContent && j + 1 in tableContent[0] && i + 1 in tableContent && tableContent[i - 1][j - 1] == 'x' && tableContent[i + 1][j + 1] == 'x')
+                            return [i, j, emptyCells];
+                        // átlósan vizsgál +45°-ban
+                        if (j - 2 in tableContent[0] && i + 2 in tableContent && tableContent[i + 1][j - 1] == 'x' && tableContent[i + 2][j - 2] == 'x')
+                            return [i, j, emptyCells];
+                        if (j + 2 in tableContent[0] && i - 2 in tableContent && tableContent[i - 1][j + 1] == 'x' && tableContent[i - 2][j + 2] == 'x')
+                            return [i, j, emptyCells];
+                        if (j - 1 in tableContent[0] && i - 1 in tableContent && j + 1 in tableContent[0] && i + 1 in tableContent && tableContent[i - 1][j + 1] == 'x' && tableContent[i + 1][j - 1] == 'x')
+                            return [i, j, emptyCells];
+                    }
                 }
             }
         }
+        // ha nem tud nyerni és nincs mit kivédeni
         if (emptyCells == 0) {
             alert('döntetlen!');
             location.reload();
-        } else {
-            var coordinates = searchIfThereARow(tableContent);
-            if(coordinates)
-            return coordinates;
+        } else
             return searchOptimal(tableContent);
-        }
     } else {
         alert(`A nyertes: ${nyertes}`);
         location.reload();

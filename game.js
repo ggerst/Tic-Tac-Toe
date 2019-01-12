@@ -1,4 +1,6 @@
 var size = parseInt(prompt('mekkora legyen? (javasolt: 3)', '3'), 10);
+if (!size)
+    size = 3;
 
 function createTable() {
     document.querySelector('#board').innerHTML = '';

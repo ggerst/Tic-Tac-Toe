@@ -1,6 +1,9 @@
 var size = parseInt(prompt('mekkora legyen? (javasolt: 3)', '3'), 10);
 if (!size)
     size = 3;
+var whosFirst = prompt('ki kezdjen? x vagy o?', 'x');
+if (whosFirst != 'o' && whosFirst != 'x')
+    whosFirst = 'x';
 
 function createTable() {
     document.querySelector('#board').innerHTML = '';
@@ -187,6 +190,15 @@ function getCoordinates(tableContent) {
     }
 }
 
+function takeLastEmpty(tableContent) {
+    for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+            if (tableContent[i][j] !== '')
+                document.querySelectorAll('tr')[i].children[j].innerHTML = 'o';
+        }
+    }
+}
+
 function putOifPossible(coordinates = []) {
     var i = coordinates[0] || 0;
     var j = coordinates[1] || 0;
@@ -214,10 +226,14 @@ function AIresponse() {
     let tableContent = getTableContent();
     console.log(tableContent);
     setTimeout(function () {
-        putOifPossible(getCoordinates(tableContent));
+        let resultAI = getCoordinates(tableContent);
+        if (resultAI)
+            putOifPossible(resultAI)
+        else
+            takeLastEmpty(tableContent);
         tableContent = getTableContent();
         var nyertes = checkWin(tableContent);
-
+        
         setTimeout(function () {
             if (nyertes !== false) {
                 alert(`A nyertes: ${nyertes}`);
@@ -245,7 +261,19 @@ function addeventlistener() {
     }
 }
 
+function firstMove() {
+    let max = size * size;
+    let random_No;
+    if (size % 2 == 1)
+        random_No = 2 * parseInt((Math.random() * max / 2), 10);
+    else
+        random_No = parseInt(Math.random() * max, 10);
+    document.querySelectorAll('td')[random_No].innerHTML = 'o';
+}
+
 createTable();
+if (whosFirst == 'o')
+    firstMove();
 addeventlistener();
 
 
